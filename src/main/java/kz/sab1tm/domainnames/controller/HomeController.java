@@ -15,7 +15,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("domains", domainService.getByStatus(DomainStatus.NOT_RELEASED));
+        model.addAttribute("domains", domainService.getAll());
         return "index";
     }
 }

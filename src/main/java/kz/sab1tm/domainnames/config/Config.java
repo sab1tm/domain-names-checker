@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 
@@ -31,5 +32,10 @@ public class Config {
         config.setJdbcUrl("jdbc:duckdb:" + appEnv.getDbFileName());
         HikariDataSource ds = new HikariDataSource(config);
         return ds;
+    }
+
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
     }
 }
