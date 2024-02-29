@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @AllArgsConstructor
-public class UpdateRepository {
+public class InitRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -15,7 +15,7 @@ public class UpdateRepository {
                 CREATE TABLE variables (key VARCHAR, value VARCHAR);
                 INSERT INTO variables VALUES ('version', '1');
                 
-                CREATE TABLE domains (name VARCHAR, release_date DATE, check_date DATE);
+                CREATE TABLE domains (name VARCHAR, release_date DATE, check_date DATE, status VARCHAR, source VARCHAR);
                 """;
         jdbcTemplate.execute(sql);
     }

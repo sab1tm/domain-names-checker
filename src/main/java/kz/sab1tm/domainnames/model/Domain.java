@@ -1,11 +1,13 @@
 package kz.sab1tm.domainnames.model;
 
+import kz.sab1tm.domainnames.model.enumeration.DomainSource;
+import kz.sab1tm.domainnames.model.enumeration.DomainStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 @Data
 @Builder
@@ -14,6 +16,8 @@ import java.time.LocalDate;
 public class Domain {
 
     private String name;
-    private LocalDate releaseDate;
-    private LocalDate checkDate;
+    private DomainSource source;
+    private Date releaseDate;
+    private Date checkDate;
+    private DomainStatus status;
 }

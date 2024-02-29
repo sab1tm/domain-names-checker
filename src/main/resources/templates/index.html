@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Domains</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+
+<style>
+    .domain-name {
+        font-size: 14pt;
+    }
+</style>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span> <span class="icon-bar">
+                    </span>
+            </button>
+            <a class="navbar-brand" href="/">Free domain names</a>
+        </div>
+    </div>
+</nav>
+
+<br><br><br><br>
+<div class="container">
+    <h1>Domain List:</h1>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>Name</th>
+            <th>Source</th>
+            <th>Release date</th>
+            <th>Check date</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="domain : ${domains}">
+            <td class="domain-name" th:text="${domain.name}"></td>
+            <td th:text="${domain.source}"></td>
+            <td th:text="${domain.releaseDate}"></td>
+            <td th:text="${domain.checkDate}"></td>
+            <td th:text="${domain.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
