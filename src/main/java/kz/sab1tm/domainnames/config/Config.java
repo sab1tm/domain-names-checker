@@ -2,7 +2,7 @@ package kz.sab1tm.domainnames.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,13 +10,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 
 @Configuration
+@AllArgsConstructor
 public class Config {
 
     private final AppEnv appEnv;
-
-    public Config(AppEnv appEnv) {
-        this.appEnv = appEnv;
-    }
 
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource){

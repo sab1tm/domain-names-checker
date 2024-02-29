@@ -5,6 +5,8 @@
     Spring Web
     Thymleaf
     DuckDB
+    jsoup
+    Lombok
 
 ### domain names source
     ps.kz

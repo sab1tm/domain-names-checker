@@ -12,9 +12,9 @@ public class VariableMapper implements RowMapper<Variable> {
 
     @Override
     public Variable mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Variable variable = new Variable();
-        variable.setKey(rs.getString("key"));
-        variable.setValue(rs.getString("value"));
-        return variable;
+        Variable entity = new Variable();
+        entity.setKey(rs.getString("key"));
+        entity.setValue(rs.getString("value"));
+        return entity;
     }
 }
