@@ -36,12 +36,12 @@ public class DomainService {
         return domainRepository.getAll();
     }
 
-    public List<Domain> get10TodayReleases() {
-        return domainRepository.get10TodayReleases();
+    public List<Domain> getLimitTodayReleases(int limit) {
+        return domainRepository.getLimitTodayReleases(limit);
     }
 
-    public List<Domain> get10OldTodayReleases() {
-        return domainRepository.get10OldTodayReleases();
+    public List<Domain> getLimitOldTodayReleases(int limit) {
+        return domainRepository.getLimitOldTodayReleases(limit);
     }
 
     public List<Domain> getByStatus(DomainStatusEnum status) {

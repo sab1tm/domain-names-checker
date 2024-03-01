@@ -74,7 +74,7 @@ public class PsService {
     @Scheduled(fixedDelay = 120000) // Запуск каждые 2 минут
     public void todayReleasesProcessing() {
         log.info("=== monitoring domains released today ===");
-        List<Domain> list = domainService.get10TodayReleases();
+        List<Domain> list = domainService.getLimitTodayReleases(50);
         notReleasedProcessing(list);
         log.info("=== end ===");
     }
@@ -82,7 +82,7 @@ public class PsService {
     @Scheduled(fixedDelay = 300000) // Запуск каждые 5 минут
     public void oldReleasesProcessing() {
         log.info("=== monitoring previously unreleased domains ===");
-        List<Domain> list = domainService.get10OldTodayReleases();
+        List<Domain> list = domainService.getLimitOldTodayReleases(50);
         notReleasedProcessing(list);
         log.info("=== end ===");
     }
