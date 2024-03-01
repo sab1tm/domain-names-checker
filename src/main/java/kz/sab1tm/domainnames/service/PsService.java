@@ -6,6 +6,7 @@ import kz.sab1tm.domainnames.model.dto.ps.*;
 import kz.sab1tm.domainnames.model.enumeration.DomainSource;
 import kz.sab1tm.domainnames.model.enumeration.DomainStatus;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,6 +36,7 @@ import java.util.Objects;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PsService {
 
     private final AppEnv appEnv;
@@ -47,7 +49,7 @@ public class PsService {
 
     @Scheduled(cron = "0 1 0 * * ?") // Запуск в 00:01 каждую ночь
     public void run() {
-        System.out.println("=== Опрос списка доменов из PS.kz, освобождающихся завтра ===");
+        log.info("=== request domains available tomorrow ===");
         try {
             Document doc = Jsoup.connect(URL_TOMORROW).get();
             Date nextDay = Date.valueOf(LocalDate.now().plusDays(1));
@@ -60,23 +62,23 @@ public class PsService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("=== Завершен ===");
+        log.info("=== end ===");
     }
 
     @Scheduled(fixedDelay = 300000) // Запуск каждые 5 минут
     public void todayReleasesProcessing() {
-        System.out.println("=== Опрос статусов доменов, которые должны освободится сегодня ===");
+        log.info("=== monitoring domains released today ===");
         List<Domain> list = domainService.getTodayReleases();
         notReleasedProcessing(list);
-        System.out.println("=== Завершен ===");
+        log.info("=== end ===");
     }
 
     @Scheduled(fixedDelay = 600000) // Запуск каждые 10 минут
     public void oldReleasesProcessing() {
-        System.out.println("=== Опрос статусов доменов, которые должны были освободится ранее ===");
+        log.info("=== monitoring previously unreleased domains ===");
         List<Domain> list = domainService.getOldTodayReleases();
         notReleasedProcessing(list);
-        System.out.println("=== Завершен ===");
+        log.info("=== end ===");
     }
 
     private void domainProcessing(Element div, Date nextDay) {
@@ -85,7 +87,7 @@ public class PsService {
             String domainName = spanElement.text();
             // delete old
             domainService.deleteByName(domainName);
-            System.out.println("добавляется в БД: " + domainName);
+            log.info("added domain {}", domainName);
             domainService.create(
                     Domain.builder()
                             .name(domainName)
@@ -102,7 +104,6 @@ public class PsService {
 
     private void notReleasedProcessing(List<Domain> list) {
         for (Domain domain : list) {
-            System.out.print("опрос статуса для: " + domain.getName());
             String requestUrl = String.format(URL_CHECK, appEnv.getPsApiLogin(), appEnv.getPsApiPassword(), domain.getName());
             try {
                 PsResponseDto responseDto = restTemplate.getForObject(requestUrl, PsResponseDto.class);
@@ -114,26 +115,22 @@ public class PsService {
                             if (domain.getName().equals(domainDto.dname())) {
                                 if (domainDto.result() == PsDomainResultEnum.Available) {
                                     domain.setStatus(DomainStatus.AVAILABLE);
-                                    domain.setCheckDateTime(LocalDateTime.now());
-                                    System.out.println(", доступен");
-                                    domainService.update(domain);
                                 } else if (domainDto.result() == PsDomainResultEnum.error) {
                                     if (domainDto.errorCode() == PsErrorCodeEnum.DOMAIN_ALREADY_EXISTS) {
                                         domain.setStatus(DomainStatus.TAKEN);
-                                        System.out.println(", не доступен");
                                     } else {
                                         domain.setErrorCode(domainDto.errorCode());
                                         domain.setErrorText(domainDto.errorText());
-                                        System.out.println(", не освобожден");
                                     }
-                                    domain.setCheckDateTime(LocalDateTime.now());
-                                    domainService.update(domain);
                                 }
+                                domain.setCheckDateTime(LocalDateTime.now());
+                                domainService.update(domain);
+                                log.info("request for {}, status: {}", domain.getName(), domain.getStatus());
                             }
                         }
                     }
                 } else {
-                    System.out.println(", ошибка");
+                    log.error("request for {}, result is error", domain.getName());
                 }
                 try {
                     Thread.sleep(2000);
@@ -141,11 +138,9 @@ public class PsService {
                     throw new RuntimeException(e);
                 }
             } catch (Exception e) {
-                System.out.println(", ошибка");
-                System.out.println(e.getMessage());
+                log.error("request for {}, throwing exception", domain.getName());
+                log.error(e.getMessage());
             }
         }
     }
-
-
 }
