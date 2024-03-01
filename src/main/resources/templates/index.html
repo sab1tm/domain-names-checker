@@ -32,7 +32,16 @@
 
 <br><br><br><br>
 <div class="container">
-    <h1>Domain List:</h1>
+    <div class="btn-group" role="group" aria-label="Filter">
+        <a href="?filter=ALL" class="btn btn-secondary">ALL</a>
+        <a href="?filter=TODAY" class="btn btn-secondary">TODAY</a>
+        <a href="?filter=TOMORROW" class="btn btn-secondary">TOMORROW</a>
+        <a href="?filter=AVAILABLE" class="btn btn-secondary">AVAILABLE</a>
+        <a href="?filter=TAKEN" class="btn btn-secondary">TAKEN</a>
+    </div>
+    <br><br>
+    <h2 th:if="${param.filter != null}" th:text="'Current Filter: ' + ${param.filter}"></h2>
+
     <table class="table table-bordered">
         <thead class="thead-dark">
         <tr>

@@ -1,8 +1,8 @@
 package kz.sab1tm.domainnames.model;
 
 import kz.sab1tm.domainnames.model.dto.ps.PsErrorCodeEnum;
-import kz.sab1tm.domainnames.model.enumeration.DomainSource;
-import kz.sab1tm.domainnames.model.enumeration.DomainStatus;
+import kz.sab1tm.domainnames.model.enumeration.DomainSourceEnum;
+import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,10 +20,10 @@ import java.time.format.DateTimeFormatter;
 public class Domain {
 
     private String name;
-    private DomainSource source;
+    private DomainSourceEnum source;
     private Date releaseDate;
     private LocalDateTime checkDateTime;
-    private DomainStatus status;
+    private DomainStatusEnum status;
     private PsErrorCodeEnum errorCode;
     private String errorText;
 

@@ -1,6 +1,6 @@
 package kz.sab1tm.domainnames.model.enumeration;
 
-public enum DomainStatus {
+public enum DomainStatusEnum {
     HOLDED,
     AVAILABLE,
     TAKEN

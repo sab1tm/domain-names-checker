@@ -1,7 +1,7 @@
 package kz.sab1tm.domainnames.repository;
 
 import kz.sab1tm.domainnames.model.Domain;
-import kz.sab1tm.domainnames.model.enumeration.DomainStatus;
+import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
 import kz.sab1tm.domainnames.repository.mapper.DomainMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -56,11 +56,11 @@ public class DomainRepository {
 
     public List<Domain> get10TodayReleases() {
         String sql = "SELECT * FROM domains WHERE status = ? AND release_date = ? ORDER BY check_date_time LIMIT 10";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatus.HOLDED.toString(), Date.valueOf(LocalDate.now())},
+        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.HOLDED.toString(), Date.valueOf(LocalDate.now())},
                 new BeanPropertyRowMapper<>(Domain.class));
     }
 
-    public List<Domain> getByStatus(DomainStatus status) {
+    public List<Domain> getByStatus(DomainStatusEnum status) {
         String sql = "SELECT * FROM domains WHERE status = ? ORDER BY length(name)";
         return jdbcTemplate.query(sql, new Object[]{status.toString()},
                 new BeanPropertyRowMapper<>(Domain.class));
@@ -68,7 +68,31 @@ public class DomainRepository {
 
     public List<Domain> get10OldTodayReleases() {
         String sql = "SELECT * FROM domains WHERE status = ? AND release_date < ? ORDER BY check_date_time LIMIT 10";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatus.HOLDED.toString(), Date.valueOf(LocalDate.now())},
+        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.HOLDED.toString(), Date.valueOf(LocalDate.now())},
+                new BeanPropertyRowMapper<>(Domain.class));
+    }
+
+    public List<Domain> getTodayReleases() {
+        String sql = "SELECT * FROM domains WHERE (status = ? OR status = ?) AND release_date = ? ORDER BY length(name)";
+        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.HOLDED.toString(), DomainStatusEnum.AVAILABLE.toString(), Date.valueOf(LocalDate.now())},
+                new BeanPropertyRowMapper<>(Domain.class));
+    }
+
+    public List<Domain> getTomorrowReleases() {
+        String sql = "SELECT * FROM domains WHERE status = ? AND release_date = ? ORDER BY length(name)";
+        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.HOLDED.toString(), Date.valueOf(LocalDate.now().plusDays(1))},
+                new BeanPropertyRowMapper<>(Domain.class));
+    }
+
+    public List<Domain> getAvailable() {
+        String sql = "SELECT * FROM domains WHERE status = ? ORDER BY length(name)";
+        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.AVAILABLE.toString()},
+                new BeanPropertyRowMapper<>(Domain.class));
+    }
+
+    public List<Domain> getTaken() {
+        String sql = "SELECT * FROM domains WHERE status = ? ORDER BY length(name)";
+        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.TAKEN.toString()},
                 new BeanPropertyRowMapper<>(Domain.class));
     }
 }

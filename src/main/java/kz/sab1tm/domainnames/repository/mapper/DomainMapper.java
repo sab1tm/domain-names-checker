@@ -2,8 +2,8 @@ package kz.sab1tm.domainnames.repository.mapper;
 
 import kz.sab1tm.domainnames.model.Domain;
 import kz.sab1tm.domainnames.model.dto.ps.PsErrorCodeEnum;
-import kz.sab1tm.domainnames.model.enumeration.DomainSource;
-import kz.sab1tm.domainnames.model.enumeration.DomainStatus;
+import kz.sab1tm.domainnames.model.enumeration.DomainSourceEnum;
+import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +20,8 @@ public class DomainMapper implements RowMapper<Domain> {
         String name = rs.getString("name");
         Date releaseDate = rs.getDate("release_date");
         LocalDateTime checkDateTime = rs.getTimestamp("check_date_time").toLocalDateTime();
-        DomainStatus status = DomainStatus.valueOf(rs.getString("status"));
-        DomainSource source = DomainSource.valueOf(rs.getString("source"));
+        DomainStatusEnum status = DomainStatusEnum.valueOf(rs.getString("status"));
+        DomainSourceEnum source = DomainSourceEnum.valueOf(rs.getString("source"));
         PsErrorCodeEnum errorCode = PsErrorCodeEnum.valueOf(rs.getString("error_code"));
         String errorText = rs.getString("error_text");
         return Domain.builder()

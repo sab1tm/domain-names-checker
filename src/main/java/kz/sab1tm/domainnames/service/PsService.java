@@ -3,8 +3,8 @@ package kz.sab1tm.domainnames.service;
 import kz.sab1tm.domainnames.config.AppEnv;
 import kz.sab1tm.domainnames.model.Domain;
 import kz.sab1tm.domainnames.model.dto.ps.*;
-import kz.sab1tm.domainnames.model.enumeration.DomainSource;
-import kz.sab1tm.domainnames.model.enumeration.DomainStatus;
+import kz.sab1tm.domainnames.model.enumeration.DomainSourceEnum;
+import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -13,6 +13,8 @@ import org.jsoup.nodes.Element;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -43,15 +45,19 @@ public class PsService {
     private final DomainService domainService;
     private final RestTemplate restTemplate;
 
-    private final String URL_TOMORROW = "https://www.ps.kz/domains/lists/freez?period=tomorrow";
-    private final String URL_TODAY = "https://www.ps.kz/domains/lists/freez";
-    private final String URL_CHECK = "https://api.ps.kz/kzdomain/domain-check?username=%s&password=%s&input_format=http&output_format=json&dname=%s";
+    private final String URL_RELEASES = "https://www.ps.kz/domains/lists/freez";
+    private final String URL_CHECK = "https://api.ps.kz/kzdomain/domain-check?username=%s&password=%s&input_format=http&output_format=json";
 
     @Scheduled(cron = "0 1 0 * * ?") // Запуск в 00:01 каждую ночь
     public void run() {
         log.info("=== request domains available tomorrow ===");
+
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL_RELEASES)
+                .queryParam("period", "tomorrow")
+                .build();
+
         try {
-            Document doc = Jsoup.connect(URL_TOMORROW).get();
+            Document doc = Jsoup.connect(uri.toUriString()).get();
             Date nextDay = Date.valueOf(LocalDate.now().plusDays(1));
 
             for (Element div : doc.select("div")) {
@@ -93,8 +99,8 @@ public class PsService {
                             .name(domainName)
                             .releaseDate(nextDay)
                             .checkDateTime(LocalDateTime.now())
-                            .status(DomainStatus.HOLDED)
-                            .source(DomainSource.PS_KZ)
+                            .status(DomainStatusEnum.HOLDED)
+                            .source(DomainSourceEnum.PS_KZ)
                             .errorCode(null)
                             .errorText(null)
                             .build()
@@ -103,21 +109,30 @@ public class PsService {
     }
 
     private void notReleasedProcessing(List<Domain> list) {
-        for (Domain domain : list) {
-            String requestUrl = String.format(URL_CHECK, appEnv.getPsApiLogin(), appEnv.getPsApiPassword(), domain.getName());
-            try {
-                PsResponseDto responseDto = restTemplate.getForObject(requestUrl, PsResponseDto.class);
-                if (responseDto.result() == PsResultEnum.success) {
-                    if (Objects.nonNull(responseDto.answer())) {
-                        List<PsDomainDto> domains = responseDto.answer().domains();
-                        if (!domains.isEmpty()) {
-                            PsDomainDto domainDto = domains.getFirst();
+        if (list.isEmpty())
+            return;
+
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL_CHECK)
+                .queryParam("username", appEnv.getPsApiLogin())
+                .queryParam("password", appEnv.getPsApiPassword())
+                .queryParam("input_format", "http")
+                .queryParam("output_format", "json")
+                .queryParam("dname[]", list.stream().map(Domain::getName).toArray())
+                .build();
+
+        try {
+            PsResponseDto responseDto = restTemplate.getForObject(uri.toUriString(), PsResponseDto.class);
+            if (responseDto.result() == PsResultEnum.success && Objects.nonNull(responseDto.answer())) {
+                List<PsDomainDto> domainsResult = responseDto.answer().domains();
+                if (!domainsResult.isEmpty()) {
+                    for (Domain domain : list) {
+                        for (PsDomainDto domainDto : domainsResult) {
                             if (domain.getName().equals(domainDto.dname())) {
                                 if (domainDto.result() == PsDomainResultEnum.Available) {
-                                    domain.setStatus(DomainStatus.AVAILABLE);
+                                    domain.setStatus(DomainStatusEnum.AVAILABLE);
                                 } else if (domainDto.result() == PsDomainResultEnum.error) {
                                     if (domainDto.errorCode() == PsErrorCodeEnum.DOMAIN_ALREADY_EXISTS) {
-                                        domain.setStatus(DomainStatus.TAKEN);
+                                        domain.setStatus(DomainStatusEnum.TAKEN);
                                     } else {
                                         domain.setErrorCode(domainDto.errorCode());
                                         domain.setErrorText(domainDto.errorText());
@@ -125,22 +140,17 @@ public class PsService {
                                 }
                                 domain.setCheckDateTime(LocalDateTime.now());
                                 domainService.update(domain);
-                                log.info("request for {}, status: {}", domain.getName(), domain.getStatus());
+                                log.info("{}, status: {}", domain.getName(), domain.getStatus());
                             }
                         }
                     }
-                } else {
-                    log.error("request for {}, result is error", domain.getName());
                 }
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            } catch (Exception e) {
-                log.error("request for {}, throwing exception", domain.getName());
-                log.error(e.getMessage());
+            } else {
+                log.error("request error");
             }
+        } catch (Exception e) {
+            log.error("request exception");
+            log.error(e.getMessage());
         }
     }
 }
