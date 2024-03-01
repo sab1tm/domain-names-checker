@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 @Service
 public class DomainMapper implements RowMapper<Domain> {
@@ -18,7 +19,7 @@ public class DomainMapper implements RowMapper<Domain> {
     public Domain mapRow(ResultSet rs, int rowNum) throws SQLException {
         String name = rs.getString("name");
         Date releaseDate = rs.getDate("release_date");
-        Date checkDate = rs.getDate("check_date");
+        LocalDateTime checkDateTime = rs.getTimestamp("check_date_time").toLocalDateTime();
         DomainStatus status = DomainStatus.valueOf(rs.getString("status"));
         DomainSource source = DomainSource.valueOf(rs.getString("source"));
         PsErrorCodeEnum errorCode = PsErrorCodeEnum.valueOf(rs.getString("error_code"));
@@ -26,7 +27,7 @@ public class DomainMapper implements RowMapper<Domain> {
         return Domain.builder()
                 .name(name)
                 .releaseDate(releaseDate)
-                .checkDate(checkDate)
+                .checkDateTime(checkDateTime)
                 .status(status)
                 .source(source)
                 .errorCode(errorCode)

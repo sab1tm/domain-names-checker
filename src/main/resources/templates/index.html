@@ -51,7 +51,7 @@
             </td>
             <td th:text="${domain.source}"></td>
             <td th:text="${domain.releaseDate}"></td>
-            <td th:text="${domain.checkDate}"></td>
+            <td th:text="${domain.getFormattedCheckDateTime()}"></td>
             <td th:text="${domain.status}"></td>
             <td th:text="${domain.errorText}"></td>
         </tr>

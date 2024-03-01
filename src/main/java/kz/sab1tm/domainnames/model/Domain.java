@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @Builder
@@ -19,8 +21,16 @@ public class Domain {
     private String name;
     private DomainSource source;
     private Date releaseDate;
-    private Date checkDate;
+    private LocalDateTime checkDateTime;
     private DomainStatus status;
     private PsErrorCodeEnum errorCode;
     private String errorText;
+
+    public String getFormattedCheckDateTime() {
+        if (checkDateTime != null) {
+            return checkDateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
+        } else {
+            return "";
+        }
+    }
 }

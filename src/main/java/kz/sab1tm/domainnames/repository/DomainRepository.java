@@ -20,19 +20,19 @@ public class DomainRepository {
     private final DomainMapper mapper;
 
     public void create(Domain entity) {
-        String sql = "INSERT INTO domains (name, release_date, check_date, status, source, error_code, error_text) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO domains (name, release_date, check_date_time, status, source, error_code, error_text) VALUES (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(
                 sql, entity.getName(), entity.getReleaseDate(),
-                entity.getCheckDate(), entity.getStatus().toString(),
+                entity.getCheckDateTime(), entity.getStatus().toString(),
                 entity.getSource().toString(), entity.getErrorCode() != null ? entity.getErrorCode().toString() : null,
                 entity.getErrorText()
         );
     }
 
     public void update(Domain entity) {
-        String sql = "UPDATE domains SET release_date = ?, check_date = ?, status = ?, source = ?, error_code = ?, error_text = ? WHERE name = ?";
+        String sql = "UPDATE domains SET release_date = ?, check_date_time = ?, status = ?, source = ?, error_code = ?, error_text = ? WHERE name = ?";
         jdbcTemplate.update(
-                sql, entity.getReleaseDate(), entity.getCheckDate(),
+                sql, entity.getReleaseDate(), entity.getCheckDateTime(),
                 entity.getStatus().toString(), entity.getSource().toString(),
                 entity.getErrorCode() != null ? entity.getErrorCode().toString() : null,
                 entity.getErrorText(), entity.getName()
@@ -50,13 +50,13 @@ public class DomainRepository {
     }
 
     public List<Domain> getAll() {
-        String sql = "SELECT * FROM domains";
+        String sql = "SELECT * FROM domains ORDER BY length(name)";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class));
     }
 
     public List<Domain> getTodayReleases() {
         String sql = "SELECT * FROM domains WHERE status = ? AND release_date = ?";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatus.NOT_RELEASED.toString(), Date.valueOf(LocalDate.now())},
+        return jdbcTemplate.query(sql, new Object[]{DomainStatus.WAITING_RELEASE.toString(), Date.valueOf(LocalDate.now())},
                 new BeanPropertyRowMapper<>(Domain.class));
     }
 
@@ -68,7 +68,7 @@ public class DomainRepository {
 
     public List<Domain> getOldTodayReleases() {
         String sql = "SELECT * FROM domains WHERE status = ? AND release_date < ?";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatus.NOT_RELEASED.toString(), Date.valueOf(LocalDate.now())},
+        return jdbcTemplate.query(sql, new Object[]{DomainStatus.WAITING_RELEASE.toString(), Date.valueOf(LocalDate.now())},
                 new BeanPropertyRowMapper<>(Domain.class));
     }
 }

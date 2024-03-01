@@ -6,7 +6,6 @@ import kz.sab1tm.domainnames.model.dto.ps.*;
 import kz.sab1tm.domainnames.model.enumeration.DomainSource;
 import kz.sab1tm.domainnames.model.enumeration.DomainStatus;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,6 +42,7 @@ public class PsService {
     private final RestTemplate restTemplate;
 
     private final String URL_TOMORROW = "https://www.ps.kz/domains/lists/freez?period=tomorrow";
+    private final String URL_TODAY = "https://www.ps.kz/domains/lists/freez";
     private final String URL_CHECK = "https://api.ps.kz/kzdomain/domain-check?username=%s&password=%s&input_format=http&output_format=json&dname=%s";
 
     @Scheduled(cron = "0 1 0 * * ?") // Запуск в 00:01 каждую ночь
@@ -89,8 +90,8 @@ public class PsService {
                     Domain.builder()
                             .name(domainName)
                             .releaseDate(nextDay)
-                            .checkDate(null)
-                            .status(DomainStatus.NOT_RELEASED)
+                            .checkDateTime(LocalDateTime.now())
+                            .status(DomainStatus.WAITING_RELEASE)
                             .source(DomainSource.PS_KZ)
                             .errorCode(null)
                             .errorText(null)
@@ -113,9 +114,7 @@ public class PsService {
                             if (domain.getName().equals(domainDto.dname())) {
                                 if (domainDto.result() == PsDomainResultEnum.Available) {
                                     domain.setStatus(DomainStatus.AVAILABLE);
-                                    domain.setCheckDate(Date.valueOf(LocalDate.now()));
-                                    domain.setErrorCode(null);
-                                    domain.setErrorText(null);
+                                    domain.setCheckDateTime(LocalDateTime.now());
                                     System.out.println(", доступен");
                                     domainService.update(domain);
                                 } else if (domainDto.result() == PsDomainResultEnum.error) {
@@ -123,11 +122,11 @@ public class PsService {
                                         domain.setStatus(DomainStatus.NOT_AVAILABLE);
                                         System.out.println(", не доступен");
                                     } else {
+                                        domain.setErrorCode(domainDto.errorCode());
+                                        domain.setErrorText(domainDto.errorText());
                                         System.out.println(", не освобожден");
                                     }
-                                    domain.setCheckDate(Date.valueOf(LocalDate.now()));
-                                    domain.setErrorCode(domainDto.errorCode());
-                                    domain.setErrorText(domainDto.errorText());
+                                    domain.setCheckDateTime(LocalDateTime.now());
                                     domainService.update(domain);
                                 }
                             }

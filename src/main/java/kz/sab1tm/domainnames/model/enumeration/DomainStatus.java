@@ -1,7 +1,7 @@
 package kz.sab1tm.domainnames.model.enumeration;
 
 public enum DomainStatus {
-    NOT_RELEASED,
+    WAITING_RELEASE,
     AVAILABLE,
     NOT_AVAILABLE
 }

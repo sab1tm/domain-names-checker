@@ -16,7 +16,7 @@ public class InitRepository {
                 INSERT INTO variables VALUES ('version', '1');
                 
                 CREATE TABLE domains (
-                    name VARCHAR, release_date DATE, check_date DATE, 
+                    name VARCHAR, release_date DATE, check_date_time TIMESTAMP, 
                     status VARCHAR, source VARCHAR, 
                     error_code VARCHAR, error_text VARCHAR
                 );
