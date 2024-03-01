@@ -1,2 +1,7 @@
 app:
   db-file-name: domains.db
+  ps-api-login: ps.kz-api-username
+  ps-api-password: ps.kz-api-password
+
+server:
+  port: 9005
