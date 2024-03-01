@@ -50,49 +50,64 @@ public class DomainRepository {
     }
 
     public List<Domain> getAll() {
-        String sql = "SELECT * FROM domains ORDER BY length(name)";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class));
+        String sql = "SELECT * FROM domains WHERE status != ? ORDER BY length(name)";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class), DomainStatusEnum.TAKEN.toString());
     }
 
     public List<Domain> getLimitTodayReleases(int limit) {
         String sql = "SELECT * FROM domains WHERE status = ? AND release_date = ? ORDER BY check_date_time LIMIT ?";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.HOLDED.toString(), Date.valueOf(LocalDate.now()), limit},
-                new BeanPropertyRowMapper<>(Domain.class));
+        return jdbcTemplate.query(
+                sql, new BeanPropertyRowMapper<>(Domain.class),
+                DomainStatusEnum.HOLDED.toString(),
+                Date.valueOf(LocalDate.now()),
+                limit
+        );
     }
 
     public List<Domain> getByStatus(DomainStatusEnum status) {
         String sql = "SELECT * FROM domains WHERE status = ? ORDER BY length(name)";
-        return jdbcTemplate.query(sql, new Object[]{status.toString()},
-                new BeanPropertyRowMapper<>(Domain.class));
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class), status.toString());
     }
 
     public List<Domain> getLimitOldTodayReleases(int limit) {
         String sql = "SELECT * FROM domains WHERE status = ? AND release_date < ? ORDER BY check_date_time LIMIT ?";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.HOLDED.toString(), Date.valueOf(LocalDate.now()), limit},
-                new BeanPropertyRowMapper<>(Domain.class));
+        return jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(Domain.class),
+                DomainStatusEnum.HOLDED.toString(),
+                Date.valueOf(LocalDate.now()),
+                limit
+        );
     }
 
     public List<Domain> getTodayReleases() {
         String sql = "SELECT * FROM domains WHERE (status = ? OR status = ?) AND release_date = ? ORDER BY length(name)";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.HOLDED.toString(), DomainStatusEnum.AVAILABLE.toString(), Date.valueOf(LocalDate.now())},
-                new BeanPropertyRowMapper<>(Domain.class));
+        return jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(Domain.class),
+                DomainStatusEnum.HOLDED.toString(),
+                DomainStatusEnum.AVAILABLE.toString(),
+                Date.valueOf(LocalDate.now())
+        );
     }
 
     public List<Domain> getTomorrowReleases() {
         String sql = "SELECT * FROM domains WHERE status = ? AND release_date = ? ORDER BY length(name)";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.HOLDED.toString(), Date.valueOf(LocalDate.now().plusDays(1))},
-                new BeanPropertyRowMapper<>(Domain.class));
+        return jdbcTemplate.query(
+                sql,
+                new BeanPropertyRowMapper<>(Domain.class),
+                DomainStatusEnum.HOLDED.toString(),
+                Date.valueOf(LocalDate.now().plusDays(1))
+        );
     }
 
     public List<Domain> getAvailable() {
         String sql = "SELECT * FROM domains WHERE status = ? ORDER BY length(name)";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.AVAILABLE.toString()},
-                new BeanPropertyRowMapper<>(Domain.class));
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class), DomainStatusEnum.AVAILABLE.toString());
     }
 
     public List<Domain> getTaken() {
         String sql = "SELECT * FROM domains WHERE status = ? ORDER BY length(name)";
-        return jdbcTemplate.query(sql, new Object[]{DomainStatusEnum.TAKEN.toString()},
-                new BeanPropertyRowMapper<>(Domain.class));
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class), DomainStatusEnum.TAKEN.toString());
     }
 }

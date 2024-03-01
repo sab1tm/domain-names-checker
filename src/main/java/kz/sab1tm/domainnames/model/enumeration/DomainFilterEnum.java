@@ -1,7 +1,7 @@
 package kz.sab1tm.domainnames.model.enumeration;
 
 public enum DomainFilterEnum {
-    ALL,
+    ACTUAL,
     TODAY,
     TOMORROW,
     AVAILABLE,

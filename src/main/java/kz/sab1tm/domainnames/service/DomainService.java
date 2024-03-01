@@ -51,7 +51,7 @@ public class DomainService {
     public List<Domain> getByFilter(DomainFilterEnum filterEnum) {
         if (Objects.nonNull(filterEnum)) {
             switch (filterEnum) {
-                case ALL -> {
+                case ACTUAL -> {
                     return domainRepository.getAll();
                 }
                 case TODAY -> {
