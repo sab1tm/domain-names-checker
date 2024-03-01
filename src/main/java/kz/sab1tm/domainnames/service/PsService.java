@@ -91,7 +91,7 @@ public class PsService {
                             .name(domainName)
                             .releaseDate(nextDay)
                             .checkDateTime(LocalDateTime.now())
-                            .status(DomainStatus.WAITING_RELEASE)
+                            .status(DomainStatus.HOLDED)
                             .source(DomainSource.PS_KZ)
                             .errorCode(null)
                             .errorText(null)
@@ -119,7 +119,7 @@ public class PsService {
                                     domainService.update(domain);
                                 } else if (domainDto.result() == PsDomainResultEnum.error) {
                                     if (domainDto.errorCode() == PsErrorCodeEnum.DOMAIN_ALREADY_EXISTS) {
-                                        domain.setStatus(DomainStatus.NOT_AVAILABLE);
+                                        domain.setStatus(DomainStatus.TAKEN);
                                         System.out.println(", не доступен");
                                     } else {
                                         domain.setErrorCode(domainDto.errorCode());
