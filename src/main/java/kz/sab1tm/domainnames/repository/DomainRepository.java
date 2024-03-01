@@ -54,8 +54,8 @@ public class DomainRepository {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class));
     }
 
-    public List<Domain> getTodayReleases() {
-        String sql = "SELECT * FROM domains WHERE status = ? AND release_date = ?";
+    public List<Domain> get10TodayReleases() {
+        String sql = "SELECT * FROM domains WHERE status = ? AND release_date = ? ORDER BY check_date_time LIMIT 10";
         return jdbcTemplate.query(sql, new Object[]{DomainStatus.HOLDED.toString(), Date.valueOf(LocalDate.now())},
                 new BeanPropertyRowMapper<>(Domain.class));
     }
@@ -66,8 +66,8 @@ public class DomainRepository {
                 new BeanPropertyRowMapper<>(Domain.class));
     }
 
-    public List<Domain> getOldTodayReleases() {
-        String sql = "SELECT * FROM domains WHERE status = ? AND release_date < ?";
+    public List<Domain> get10OldTodayReleases() {
+        String sql = "SELECT * FROM domains WHERE status = ? AND release_date < ? ORDER BY check_date_time LIMIT 10";
         return jdbcTemplate.query(sql, new Object[]{DomainStatus.HOLDED.toString(), Date.valueOf(LocalDate.now())},
                 new BeanPropertyRowMapper<>(Domain.class));
     }

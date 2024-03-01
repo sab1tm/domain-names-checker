@@ -37,6 +37,7 @@
         <thead class="thead-dark">
         <tr>
             <th>Name</th>
+            <th>len()</th>
             <th>Source</th>
             <th>Release date</th>
             <th>Check date</th>
@@ -50,6 +51,7 @@
                 <a class="domain-name" th:href="@{'https://www.ps.kz/domains/whois/result?q=' + ${domain.name}}"
                    th:text="${domain.name}" target="_blank">Link Text</a>
             </td>
+            <td th:text="${domain.name.length()}"></td>
             <td th:text="${domain.source}"></td>
             <td th:text="${domain.getFormattedReleaseDate()}"></td>
             <td th:text="${domain.getFormattedCheckDateTime()}"></td>

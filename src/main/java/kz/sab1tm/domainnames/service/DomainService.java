@@ -34,12 +34,12 @@ public class DomainService {
         return domainRepository.getAll();
     }
 
-    public List<Domain> getTodayReleases() {
-        return domainRepository.getTodayReleases();
+    public List<Domain> get10TodayReleases() {
+        return domainRepository.get10TodayReleases();
     }
 
-    public List<Domain> getOldTodayReleases() {
-        return domainRepository.getOldTodayReleases();
+    public List<Domain> get10OldTodayReleases() {
+        return domainRepository.get10OldTodayReleases();
     }
 
     public List<Domain> getByStatus(DomainStatus status) {
