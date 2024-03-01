@@ -57,8 +57,9 @@
         <tbody>
         <tr th:each="domain : ${domains}">
             <td>
-                <a class="domain-name" th:href="@{'https://www.ps.kz/domains/whois/result?q=' + ${domain.name}}"
-                   th:text="${domain.name}" target="_blank">Link Text</a>
+                <span class="domain-name" th:text="${domain.name}"></span>
+                <a th:href="@{'https://www.ps.kz/domains/whois/result?q=' + ${domain.name}}"
+                   target="_blank">whois</a>
             </td>
             <td th:text="${domain.name.length()}"></td>
             <td th:text="${domain.source}"></td>
