@@ -36,7 +36,7 @@
         <a href="?filter=TAKEN" class="btn btn-secondary">TAKEN</a>
     </div>
     <br><br>
-    <h2 th:if="${param.filter != null}" th:text="'Current Filter: ' + ${param.filter}"></h2>
+    <h2 th:if="${param.filter != null}" th:text="'Current Filter: ' + ${param.filter} + ' (' + ${domains.size()} + ')'"></h2>
 
     <table class="table table-bordered">
         <thead class="thead-dark">
