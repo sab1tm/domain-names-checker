@@ -27,4 +27,8 @@ public class DbService {
             initRepository.init();
         }
     }
+
+    public void execute(String sql) {
+        initRepository.execute(sql);
+    }
 }

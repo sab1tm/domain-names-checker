@@ -38,6 +38,10 @@ public class DomainService {
         return domainRepository.getTodayReleases();
     }
 
+    public List<Domain> getOldTodayReleases() {
+        return domainRepository.getOldTodayReleases();
+    }
+
     public List<Domain> getByStatus(DomainStatus status) {
         return domainRepository.getByStatus(status);
     }

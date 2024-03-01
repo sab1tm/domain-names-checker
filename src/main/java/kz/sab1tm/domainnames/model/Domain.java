@@ -1,5 +1,6 @@
 package kz.sab1tm.domainnames.model;
 
+import kz.sab1tm.domainnames.model.dto.ps.PsErrorCodeEnum;
 import kz.sab1tm.domainnames.model.enumeration.DomainSource;
 import kz.sab1tm.domainnames.model.enumeration.DomainStatus;
 import lombok.AllArgsConstructor;
@@ -20,4 +21,6 @@ public class Domain {
     private Date releaseDate;
     private Date checkDate;
     private DomainStatus status;
+    private PsErrorCodeEnum errorCode;
+    private String errorText;
 }

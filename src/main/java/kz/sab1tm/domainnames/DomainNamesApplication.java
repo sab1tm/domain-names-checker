@@ -1,15 +1,11 @@
 package kz.sab1tm.domainnames;
 
 import kz.sab1tm.domainnames.service.DbService;
-import kz.sab1tm.domainnames.service.PsService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 @SpringBootApplication
 @EnableScheduling

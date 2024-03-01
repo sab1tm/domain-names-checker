@@ -40,15 +40,20 @@
             <th>Release date</th>
             <th>Check date</th>
             <th>Status</th>
+            <th>Text</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="domain : ${domains}">
-            <td class="domain-name" th:text="${domain.name}"></td>
+            <td>
+                <a class="domain-name" th:href="@{'https://www.ps.kz/domains/whois/result?q=' + ${domain.name}}"
+                   th:text="${domain.name}" target="_blank">Link Text</a>
+            </td>
             <td th:text="${domain.source}"></td>
             <td th:text="${domain.releaseDate}"></td>
             <td th:text="${domain.checkDate}"></td>
             <td th:text="${domain.status}"></td>
+            <td th:text="${domain.errorText}"></td>
         </tr>
         </tbody>
     </table>
