@@ -50,7 +50,7 @@ public class PsService {
 
     @Scheduled(cron = "0 1 0 * * ?") // Запуск в 00:01 каждую ночь
     public void run() {
-        log.info("=== request domains available tomorrow ===");
+        log.info("=== request domains available tomorrow to PS.kz ===");
 
         UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL_RELEASES)
                 .queryParam("period", "tomorrow")
@@ -91,20 +91,22 @@ public class PsService {
         Element spanElement = div.selectFirst("span");
         if (Objects.nonNull(spanElement)) {
             String domainName = spanElement.text();
-            // delete old
-            domainService.deleteByName(domainName);
-            log.info("added domain {}", domainName);
-            domainService.create(
-                    Domain.builder()
-                            .name(domainName)
-                            .releaseDate(nextDay)
-                            .checkDateTime(LocalDateTime.now())
-                            .status(DomainStatusEnum.HOLDED)
-                            .source(DomainSourceEnum.PS_KZ)
-                            .errorCode(null)
-                            .errorText(null)
-                            .build()
-            );
+            if (domainName.length() <= 20) {
+                // delete old
+                domainService.deleteByName(domainName);
+                log.info("added domain {}", domainName);
+                domainService.create(
+                        Domain.builder()
+                                .name(domainName)
+                                .releaseDate(nextDay)
+                                .checkDateTime(LocalDateTime.now())
+                                .status(DomainStatusEnum.HOLDED)
+                                .source(DomainSourceEnum.PS_KZ)
+                                .errorCode(null)
+                                .errorText(null)
+                                .build()
+                );
+            }
         }
     }
 
@@ -121,6 +123,7 @@ public class PsService {
                 .build();
 
         try {
+            String tmp = uri.toUriString();
             PsResponseDto responseDto = restTemplate.getForObject(uri.toUriString(), PsResponseDto.class);
             if (responseDto.result() == PsResultEnum.success && Objects.nonNull(responseDto.answer())) {
                 List<PsDomainDto> domainsResult = responseDto.answer().domains();

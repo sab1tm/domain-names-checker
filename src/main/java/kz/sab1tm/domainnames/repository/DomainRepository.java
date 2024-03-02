@@ -1,6 +1,7 @@
 package kz.sab1tm.domainnames.repository;
 
 import kz.sab1tm.domainnames.model.Domain;
+import kz.sab1tm.domainnames.model.enumeration.DomainSourceEnum;
 import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
 import kz.sab1tm.domainnames.repository.mapper.DomainMapper;
 import lombok.AllArgsConstructor;

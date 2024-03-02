@@ -1,5 +1,6 @@
 package kz.sab1tm.domainnames.model.enumeration;
 
 public enum DomainSourceEnum {
-    PS_KZ
+    PS_KZ,
+    ED_NET
 }
