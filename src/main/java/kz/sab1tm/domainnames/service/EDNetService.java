@@ -34,7 +34,7 @@ public class EDNetService {
 
     private final String URL_AVAILABLE = "https://www.expireddomains.net";
 
-    @Scheduled(fixedDelay = 30000) // Запуск каждые 30 секунд
+    @Scheduled(fixedDelay = 60000) // Запуск каждую минуту
     public void run() {
         log.info("=== request available domains to EDNet ===");
 
