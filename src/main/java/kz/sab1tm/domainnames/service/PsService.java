@@ -46,7 +46,7 @@ public class PsService {
     private final RestTemplate restTemplate;
 
     private final String URL_RELEASES = "https://www.ps.kz/domains/lists/freez";
-    private final String URL_CHECK = "https://api.ps.kz/kzdomain/domain-check?username=%s&password=%s&input_format=http&output_format=json";
+    private final String URL_CHECK = "https://api.ps.kz/kzdomain/domain-check";
 
     @Scheduled(cron = "0 1 0 * * ?") // Запуск в 00:01 каждую ночь
     public void run() {
@@ -91,7 +91,8 @@ public class PsService {
         Element spanElement = div.selectFirst("span");
         if (Objects.nonNull(spanElement)) {
             String domainName = spanElement.text();
-            if (domainName.length() <= 20) {
+            if (domainName.length() <= 20
+                    && !domainName.endsWith(".edu.kz")) {
                 // delete old
                 domainService.deleteByName(domainName);
                 log.info("added domain {}", domainName);
