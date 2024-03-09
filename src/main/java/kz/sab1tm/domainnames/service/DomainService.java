@@ -61,13 +61,20 @@ public class DomainService {
                     return domainRepository.getTomorrowReleases();
                 }
                 case AVAILABLE -> {
-                    return domainRepository.getAvailable();
+                    return domainRepository.getByStatus(DomainStatusEnum.AVAILABLE);
                 }
                 case TAKEN -> {
-                    return domainRepository.getTaken();
+                    return domainRepository.getByStatus(DomainStatusEnum.TAKEN);
+                }
+                case FAVORITE -> {
+                    return domainRepository.getFavorite();
                 }
             }
         }
         return domainRepository.getTodayReleases();
+    }
+
+    public void setFavorite(String name) {
+        domainRepository.setFavorite(name);
     }
 }

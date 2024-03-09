@@ -1,7 +1,6 @@
 package kz.sab1tm.domainnames.repository;
 
 import kz.sab1tm.domainnames.model.Domain;
-import kz.sab1tm.domainnames.model.enumeration.DomainSourceEnum;
 import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
 import kz.sab1tm.domainnames.repository.mapper.DomainMapper;
 import lombok.AllArgsConstructor;
@@ -102,13 +101,13 @@ public class DomainRepository {
         );
     }
 
-    public List<Domain> getAvailable() {
-        String sql = "SELECT * FROM domains WHERE status = ? ORDER BY length(name)";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class), DomainStatusEnum.AVAILABLE.toString());
+    public void setFavorite(String name) {
+        String sql = "UPDATE domains SET favorite = true WHERE name = ?";
+        jdbcTemplate.update(sql, name);
     }
 
-    public List<Domain> getTaken() {
-        String sql = "SELECT * FROM domains WHERE status = ? ORDER BY length(name)";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class), DomainStatusEnum.TAKEN.toString());
+    public List<Domain> getFavorite() {
+        String sql = "SELECT * FROM domains WHERE favorite = true ORDER BY length(name)";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Domain.class));
     }
 }

@@ -34,6 +34,7 @@
         <a href="?filter=TOMORROW" class="btn btn-secondary">TOMORROW</a>
         <a href="?filter=AVAILABLE" class="btn btn-secondary">AVAILABLE</a>
         <a href="?filter=TAKEN" class="btn btn-secondary">TAKEN</a>
+        <a href="?filter=FAVORITE" class="btn btn-secondary">FAVORITE</a>
     </div>
     <br><br>
     <h2 th:if="${param.filter != null}" th:text="'Current Filter: ' + ${param.filter} + ' (' + ${domains.size()} + ')'"></h2>
@@ -57,6 +58,7 @@
                 <a th:href="@{'https://www.ps.kz/domains/whois/result?q=' + ${domain.name}}"
                    target="_blank">whois</a>
                 <a th:href="@{'/delete?name=' + ${domain.name}}">delete</a>
+                <a th:href="@{'/favorite?name=' + ${domain.name}}">favorite</a>
             </td>
             <td th:text="${domain.name.length()}"></td>
             <td th:text="${domain.source}"></td>

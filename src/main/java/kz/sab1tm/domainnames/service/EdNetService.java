@@ -1,5 +1,6 @@
 package kz.sab1tm.domainnames.service;
 
+import kz.sab1tm.domainnames.config.AppEnv;
 import kz.sab1tm.domainnames.model.Domain;
 import kz.sab1tm.domainnames.model.enumeration.DomainSourceEnum;
 import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
@@ -9,7 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -27,15 +27,18 @@ import java.time.LocalDateTime;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class EDNetService {
+public class EdNetService {
 
     private final DomainService domainService;
     private final RestTemplate restTemplate;
+    private final AppEnv appEnv;
 
     private final String URL_AVAILABLE = "https://www.expireddomains.net";
 
 //    @Scheduled(fixedDelay = 60000) // Запуск каждую минуту
     public void run() {
+        if (appEnv.isMaintaining())
+            return;
         log.info("=== request available domains to EDNet ===");
 
         UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL_AVAILABLE)

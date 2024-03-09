@@ -1,5 +1,6 @@
 package kz.sab1tm.domainnames.service;
 
+import kz.sab1tm.domainnames.config.AppEnv;
 import kz.sab1tm.domainnames.model.Variable;
 import kz.sab1tm.domainnames.repository.InitRepository;
 import kz.sab1tm.domainnames.repository.VariableRepository;
@@ -14,6 +15,7 @@ public class DbService {
 
     private final VariableRepository variableRepository;
     private final InitRepository initRepository;
+    private final AppEnv appEnv;
 
     private int getDbVersion() {
         Variable version = variableRepository.getByKey("version");
@@ -22,6 +24,7 @@ public class DbService {
 
     public void maintaining() {
         log.info("{} maintaining {}", "=".repeat(30), "=".repeat(30));
+        appEnv.setMaintaining(true);
         try {
             // check the existence of a database file
             log.info("DB version: {}", getDbVersion());
@@ -37,6 +40,7 @@ public class DbService {
                 v2_update();
         }
 
+        appEnv.setMaintaining(false);
         log.info("{} end {}", "=".repeat(34), "=".repeat(34));
     }
 

@@ -26,4 +26,10 @@ public class HomeController {
         domainService.deleteByName(name);
         return "redirect:/";
     }
+
+    @GetMapping("/favorite")
+    public String favorite(@RequestParam String name) {
+        domainService.setFavorite(name);
+        return "redirect:/";
+    }
 }

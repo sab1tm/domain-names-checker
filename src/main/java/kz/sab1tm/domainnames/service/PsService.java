@@ -50,6 +50,8 @@ public class PsService {
 
     @Scheduled(cron = "0 1 0 * * ?") // Запуск в 00:01 каждую ночь
     public void run() {
+        if (appEnv.isMaintaining())
+            return;
         log.info("=== request domains available tomorrow to PS.kz ===");
 
         UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL_RELEASES)
@@ -73,6 +75,8 @@ public class PsService {
 
     @Scheduled(fixedDelay = 120000) // Запуск каждые 2 минут
     public void todayReleasesProcessing() {
+        if (appEnv.isMaintaining())
+            return;
         log.info("=== monitoring domains released today ===");
         List<Domain> list = domainService.getLimitTodayReleases(50);
         notReleasedProcessing(list);
@@ -81,6 +85,8 @@ public class PsService {
 
     @Scheduled(fixedDelay = 300000) // Запуск каждые 5 минут
     public void oldReleasesProcessing() {
+        if (appEnv.isMaintaining())
+            return;
         log.info("=== monitoring previously unreleased domains ===");
         List<Domain> list = domainService.getLimitOldTodayReleases(50);
         notReleasedProcessing(list);

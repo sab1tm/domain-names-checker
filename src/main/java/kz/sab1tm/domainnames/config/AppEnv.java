@@ -14,4 +14,7 @@ public class AppEnv {
     private String dbFileName;
     private String psApiLogin;
     private String psApiPassword;
+
+    // local
+    private boolean maintaining = true;
 }

@@ -5,5 +5,6 @@ public enum DomainFilterEnum {
     TODAY,
     TOMORROW,
     AVAILABLE,
-    TAKEN
+    TAKEN,
+    FAVORITE
 }
