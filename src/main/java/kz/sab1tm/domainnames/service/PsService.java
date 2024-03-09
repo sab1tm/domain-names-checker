@@ -91,8 +91,12 @@ public class PsService {
         Element spanElement = div.selectFirst("span");
         if (Objects.nonNull(spanElement)) {
             String domainName = spanElement.text();
-            if (domainName.length() <= 20
-                    && !domainName.endsWith(".edu.kz")) {
+            if (
+                    domainName.length() <= 20
+                    && !domainName.endsWith(".edu.kz")
+                    && !domainName.endsWith(".com.kz")
+                    && !domainName.endsWith(".org.kz")
+            ) {
                 // delete old
                 domainService.deleteByName(domainName);
                 log.info("added domain {}", domainName);

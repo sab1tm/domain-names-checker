@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -20,5 +19,11 @@ public class HomeController {
                        Model model) {
         model.addAttribute("domains", domainService.getByFilter(filter));
         return "index";
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam String name) {
+        domainService.deleteByName(name);
+        return "redirect:/";
     }
 }
