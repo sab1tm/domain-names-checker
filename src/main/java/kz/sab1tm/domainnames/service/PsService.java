@@ -73,7 +73,7 @@ public class PsService {
         log.info("=== end ===");
     }
 
-    @Scheduled(fixedDelay = 120000) // Запуск каждые 2 минут
+    @Scheduled(fixedDelay = 3600000) // Запуск каждые 10 минут
     public void todayReleasesProcessing() {
         if (appEnv.isMaintaining())
             return;
@@ -83,7 +83,7 @@ public class PsService {
         log.info("=== end ===");
     }
 
-    @Scheduled(fixedDelay = 300000) // Запуск каждые 5 минут
+    @Scheduled(fixedDelay = 3600000) // Запуск каждые 10 минут
     public void oldReleasesProcessing() {
         if (appEnv.isMaintaining())
             return;
@@ -134,7 +134,6 @@ public class PsService {
                 .build();
 
         try {
-            String tmp = uri.toUriString();
             PsResponseDto responseDto = restTemplate.getForObject(uri.toUriString(), PsResponseDto.class);
             if (responseDto.result() == PsResultEnum.success && Objects.nonNull(responseDto.answer())) {
                 List<PsDomainDto> domainsResult = responseDto.answer().domains();
