@@ -73,7 +73,7 @@ public class PsService {
         log.info("=== end ===");
     }
 
-    @Scheduled(fixedDelay = 3600000) // Запуск каждые 10 минут
+    @Scheduled(fixedDelay = 300000) // Запуск каждые 5 минут
     public void todayReleasesProcessing() {
         if (appEnv.isMaintaining())
             return;
@@ -83,7 +83,7 @@ public class PsService {
         log.info("=== end ===");
     }
 
-    @Scheduled(fixedDelay = 360000) // Запуск каждые 1 минут
+    @Scheduled(fixedDelay = 600000) // Запуск каждые 10 минут
     public void oldReleasesProcessing() {
         if (appEnv.isMaintaining())
             return;
