@@ -16,5 +16,5 @@ public class AppEnv {
     private String psApiPassword;
 
     // local
-    private boolean maintaining = true;
+    private volatile boolean maintaining = true;
 }

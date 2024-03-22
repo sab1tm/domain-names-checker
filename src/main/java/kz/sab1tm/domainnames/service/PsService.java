@@ -83,7 +83,7 @@ public class PsService {
         log.info("=== end ===");
     }
 
-    @Scheduled(fixedDelay = 3600000) // Запуск каждые 10 минут
+    @Scheduled(fixedDelay = 360000) // Запуск каждые 1 минут
     public void oldReleasesProcessing() {
         if (appEnv.isMaintaining())
             return;
@@ -99,9 +99,10 @@ public class PsService {
             String domainName = spanElement.text();
             if (
                     domainName.length() <= 20
-                    && !domainName.endsWith(".edu.kz")
-                    && !domainName.endsWith(".com.kz")
-                    && !domainName.endsWith(".org.kz")
+                            && !domainName.endsWith(".edu.kz")
+                            && !domainName.endsWith(".com.kz")
+                            && !domainName.endsWith(".org.kz")
+                            && !domainName.endsWith(".gov.kz")
             ) {
                 // delete old
                 domainService.deleteByName(domainName);
