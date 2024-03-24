@@ -5,6 +5,7 @@ import kz.sab1tm.domainnames.model.Domain;
 import kz.sab1tm.domainnames.model.dto.ps.*;
 import kz.sab1tm.domainnames.model.enumeration.DomainSourceEnum;
 import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
+import kz.sab1tm.domainnames.util.StringUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -99,6 +100,7 @@ public class PsService {
             String domainName = spanElement.text();
             if (
                     domainName.length() <= 20
+                            && !StringUtils.isCyrillic(domainName)
                             && !domainName.endsWith(".edu.kz")
                             && !domainName.endsWith(".com.kz")
                             && !domainName.endsWith(".org.kz")
