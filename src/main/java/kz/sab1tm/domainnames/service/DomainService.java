@@ -5,6 +5,7 @@ import kz.sab1tm.domainnames.model.enumeration.DomainFilterEnum;
 import kz.sab1tm.domainnames.model.enumeration.DomainStatusEnum;
 import kz.sab1tm.domainnames.repository.DomainRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,19 +13,23 @@ import java.util.Objects;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class DomainService {
 
     private final DomainRepository domainRepository;
 
     public void create(Domain entity) {
+        log.info("Creating domain: {}", entity.getName());
         domainRepository.create(entity);
     }
 
     public void update(Domain entity) {
+        log.info("Updating domain: {}", entity.getName());
         domainRepository.update(entity);
     }
 
     public void deleteByName(String name) {
+        log.info("Deleting domain: {}", name);
         domainRepository.deleteByName(name);
     }
 

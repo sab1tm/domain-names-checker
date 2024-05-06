@@ -69,7 +69,7 @@ public class PsService {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("Error loading page: {}", e.getLocalizedMessage());
         }
         log.info("=== end ===");
     }
@@ -84,7 +84,7 @@ public class PsService {
         log.info("=== end ===");
     }
 
-    @Scheduled(fixedDelay = 600000) // Запуск каждые 10 минут
+    @Scheduled(fixedDelay = 10000) // Запуск каждые 10 минут
     public void oldReleasesProcessing() {
         if (appEnv.isMaintaining())
             return;
